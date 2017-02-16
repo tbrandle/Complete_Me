@@ -73,32 +73,32 @@ describe('TDD with Trie', () => {
     expect(trie.suggest('wor')).to.deep.equal(['work', 'working'])
   })
 
-  // it('should populate the trie with the dictionary', function () {
-  //   let trie = new Trie ();
-  //
-  //   trie.populate(dictionary)
-  //   expect(trie._length).to.deep.equal(235886)
-  // })
-  //
-  // it('should suggest words starting with "piz" after the dictionary is populated', function () {
-  //   let trie = new Trie ();
-  //
-  //   trie.populate(dictionary)
-  //   expect(trie.suggest("piz")).to.deep.equal(["pize", "pizza", "pizzeria", "pizzicato", "pizzle"])
-  // })
-  //
-  // it.skip('should suggest words starting with "piz" after the dictionary is populated', function () {
-  //   let trie = new Trie ();
-  //
-  //   trie.populate(dictionary)
-  //   console.log(trie.suggest("piz"))
-  //     expect(trie.suggest("piz")).to.deep.equal(["pize", "pizza", "pizzeria", "pizzicato", "pizzle"])
-  //
-  //   trie.select("piz", "pizzeria")
-  //
-  //   trie.suggest("piz")
-  //     expect(trie.suggest("piz")).to.deep.equal(["pizzeria", "pize", "pizza", "pizzicato", "pizzle"])
-  // })
+  it('should populate the trie with the dictionary', function () {
+    let trie = new Trie ();
+
+    trie.populate(dictionary)
+    expect(trie._length).to.deep.equal(235886)
+  })
+
+  it('should suggest words starting with "piz" after the dictionary is populated', function () {
+    let trie = new Trie ();
+
+    trie.populate(dictionary)
+    expect(trie.suggest("piz")).to.deep.equal(["pize", "pizza", "pizzeria", "pizzicato", "pizzle"])
+  })
+
+  it.skip('should suggest words starting with "piz" after the dictionary is populated', function () {
+    let trie = new Trie ();
+
+    trie.populate(dictionary)
+    console.log(trie.suggest("piz"))
+      expect(trie.suggest("piz")).to.deep.equal(["pize", "pizza", "pizzeria", "pizzicato", "pizzle"])
+
+    trie.select("piz", "pizzeria")
+
+    trie.suggest("piz")
+      expect(trie.suggest("piz")).to.deep.equal(["pizzeria", "pize", "pizza", "pizzicato", "pizzle"])
+  })
 
 })
 

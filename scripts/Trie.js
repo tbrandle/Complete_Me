@@ -9,6 +9,7 @@ export class Trie {
   constructor() {
     this.head = new Node()
     this._length = 0
+    this.suggestedWordArray = []
   }
 
   insert(word) {
@@ -18,11 +19,8 @@ export class Trie {
       if (!current.children.hasOwnProperty(value)) {
         current.children[value] = new Node(value)
       }
-
       current = current.children[value]
-
       if (index === word.length - 1) {
-        // eval(locus)
         current.completeWord = array.join('')
       }
     })
@@ -30,36 +28,21 @@ export class Trie {
 
   suggest(string){
     let currentNode = string.split('').reduce((current, value) => {
-      if (current.children[value]) {
-        return current = current.children[value]
-      } else {
-        return current
-      }
-      // return current[value] ? current = current[value].children : current[value]
+      return current.children[value] ? current = current.children[value] : current
     }, this.head)
     return this.findCompleteWord(currentNode)
   }
 
   findCompleteWord(currentNode){
     let temp = Object.keys(currentNode.children)
-
-    let suggestedWordArray = temp.map( key => {
-      let newCurrent = currentNode.children[key]
-      if (!newCurrent.completeWord) {
-        return this.findCompleteWord(newCurrent)
-      } else {
-        return newCurrent.completeWord
+    temp.forEach( key => {
+        let newCurrent = currentNode.children[key]
+      if (newCurrent.completeWord) {
+        this.suggestedWordArray.push(newCurrent.completeWord)
       }
+      return this.findCompleteWord(newCurrent)
     })
-
-    return this.flatten(suggestedWordArray)
-  }
-
-  flatten(array){
-    let flattenArray =  array.reduce((arr, value) => {
-      return arr.concat(Array.isArray(value) ? this.flatten(value) : value)
-    }, [])
-    return flattenArray;
+     return this.suggestedWordArray
   }
 
   populate(dictionary){
@@ -68,20 +51,14 @@ export class Trie {
     })
   }
 
-  select(string, word){
+}
+
+// select(string, word){
   //find the "currentNode" of the partial string that is passed in.
-    // let currentNode = string.split('').reduce((current, value) => {
-    //   return current[value] ? current = current[value].children : current
-    // }, this.head)
+  // let currentNode = string.split('').reduce((current, value) => {
+  //   return current[value] ? current = current[value].children : current
+  // }, this.head)
 
   // save the selected word as a property of that node.
   // in suggest() add an or statement
-      // return suggestedWord || completeWord
-
-  }
-}
-
-
-// return !newCurrent.completeWord ?
-//        this.findCompleteWord(newCurrent) :
-//        newCurrent.completeWord
+  // return suggestedWord || completeWord
