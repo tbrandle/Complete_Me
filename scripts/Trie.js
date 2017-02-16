@@ -7,7 +7,7 @@ let dictionary = fs.readFileSync(text, 'utf8').trim().split('\n')
 
 export class Trie {
   constructor() {
-    this.head = {}
+    this.head = new Node()
     this._length = 0
   }
 
@@ -15,33 +15,43 @@ export class Trie {
     this._length ++;
     let current = this.head;
     let wordArray = word.split('').forEach((value, index, array) => {
-      if (!current.hasOwnProperty(value)) {
-        current[value] = new Node(value)
+      if (!current.children.hasOwnProperty(value)) {
+        current.children[value] = new Node(value)
       }
+
+      current = current.children[value]
+
       if (index === word.length - 1) {
-        current[value].completeWord = array.join('')
+        // eval(locus)
+        current.completeWord = array.join('')
       }
-      eval(locus)
-       current = current[value].children
     })
-    // eval(locus)
   }
 
   suggest(string){
     let currentNode = string.split('').reduce((current, value) => {
-      return current[value] ? current = current[value].children : current
+      if (current.children[value]) {
+        return current = current.children[value]
+      } else {
+        return current
+      }
+      // return current[value] ? current = current[value].children : current[value]
     }, this.head)
     return this.findCompleteWord(currentNode)
   }
 
   findCompleteWord(currentNode){
-    let temp = Object.keys(currentNode)
-    let suggestedWordArray = temp.map((key) => {
-      let newCurrent = currentNode[key]
-      return !newCurrent.completeWord ?
-             this.findCompleteWord(newCurrent.children) :
-             newCurrent.completeWord
+    let temp = Object.keys(currentNode.children)
+
+    let suggestedWordArray = temp.map( key => {
+      let newCurrent = currentNode.children[key]
+      if (!newCurrent.completeWord) {
+        return this.findCompleteWord(newCurrent)
+      } else {
+        return newCurrent.completeWord
+      }
     })
+
     return this.flatten(suggestedWordArray)
   }
 
@@ -70,3 +80,8 @@ export class Trie {
 
   }
 }
+
+
+// return !newCurrent.completeWord ?
+//        this.findCompleteWord(newCurrent) :
+//        newCurrent.completeWord
