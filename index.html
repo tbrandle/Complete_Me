@@ -1,0 +1,18 @@
+findCompleteWord(currentNode){
+  let temp = Object.keys(currentNode)
+  let suggestedWordArray = temp.map((key) => {
+    let newCurrent = currentNode[key]
+    if (!newCurrent.completeWord) {
+      return this.findCompleteWord(newCurrent.nextNode)
+    }
+    return newCurrent.completeWord
+  })
+  return this.flatten(suggestedWordArray)
+}
+
+flatten(array){
+  let flattenArray =  array.reduce((arr, value) => {
+    return arr.concat(Array.isArray(value) ? this.flatten(value) : value)
+  }, [])
+  return flattenArray;
+}
