@@ -7,37 +7,34 @@ let dictionary = fs.readFileSync(text, 'utf8').trim().split('\n')
 
 describe('TDD with Trie', () => {
 
+
   it('should increase the count when a word is added', function () {
     let trie = new Trie ();
     expect(trie._length).to.deep.equal(0)
-    console.log(trie._length);
     trie.insert('apple')
     expect(trie._length).to.deep.equal(1)
   })
 
-  it('should set the zero wordArray index as this.head if this.head is null', function () {
+  it('should set the first letter of the word to the children of this.head', function () {
     let trie = new Trie ();
     trie.insert('apple')
     expect(trie.head.children['a'].data).to.deep.equal('a')
   })
 
-  it.skip('should set the first wordArray index to the children of this.head', function () {
+  it('should nest the second letter of the word to the children of the first letter', function () {
     let trie = new Trie ();
     trie.insert('apple')
-    expect(trie.head['a'].data).to.deep.equal('a')
-    expect(trie.head['a'].children['p'].data).to.deep.equal('p')
+    expect(trie.head.children['a'].data).to.deep.equal('a')
+    expect(trie.head.children['a'].children['p'].data).to.deep.equal('p')
   })
 
-  it('should set the first wordArray index to the children of this.head', function () {
+  it('should increase the trie._length for each word that gets added to the trie', function () {
     let trie = new Trie ();
     trie.insert('world')
     trie.insert('word')
     trie.insert('worm')
     trie.insert('worry')
     trie.insert('can')
-    // console.log(JSON.stringify(trie, null, 4))
-
-
     expect(trie._length).to.deep.equal(5)
   })
 
@@ -48,7 +45,12 @@ describe('TDD with Trie', () => {
     expect(trie.head.children['w'].children['o'].children['r'].children['l'].children['d'].completeWord).to.deep.equal('world')
   })
 
-  it('suggest should return a list of words', function () {
+  it('suggestedWordArray should start as an empty array', function () {
+    let trie = new Trie ();
+    expect(trie.suggestedWordArray).to.deep.equal([])
+  })
+
+  it('suggest should return the completeWord value of the last index of the word', function () {
     let trie = new Trie ();
     trie.insert('world')
     expect(trie.suggest('wor')).to.deep.equal(['world'])
@@ -61,15 +63,33 @@ describe('TDD with Trie', () => {
     trie.insert('worm')
     trie.insert('worry')
     trie.insert('can')
-    expect(trie.suggest('wor')).to.deep.equal(['world', 'word', 'worm', 'worry'])
+
+    trie.suggest('wo')
+
+    expect(trie.suggestedWordArray).to.deep.equal(['world', 'word', 'worm', 'worry'])
+  })
+
+  it('should clear the suggestedWordArray once the suggest() function is called again and return a new array of words', function () {
+    let trie = new Trie ();
+    trie.insert('world')
+    trie.insert('word')
+    trie.insert('worm')
+    trie.insert('worry')
+    trie.insert('can')
+
+    trie.suggest('wo')
+
+    expect(trie.suggestedWordArray).to.deep.equal(['world', 'word', 'worm', 'worry'])
+
+    trie.suggest('ca')
+
+    expect(trie.suggestedWordArray).to.deep.equal(['can'])
   })
 
   it('should return continuation of words', function () {
     let trie = new Trie ();
     trie.insert('work')
     trie.insert('working')
-    // console.log(JSON.stringify(trie, null, 4))
-
     expect(trie.suggest('wor')).to.deep.equal(['work', 'working'])
   })
 
@@ -77,6 +97,7 @@ describe('TDD with Trie', () => {
     let trie = new Trie ();
 
     trie.populate(dictionary)
+
     expect(trie._length).to.deep.equal(235886)
   })
 
@@ -91,15 +112,11 @@ describe('TDD with Trie', () => {
     let trie = new Trie ();
 
     trie.populate(dictionary)
-    console.log(trie.suggest("piz"))
-      expect(trie.suggest("piz")).to.deep.equal(["pize", "pizza", "pizzeria", "pizzicato", "pizzle"])
 
     trie.select("piz", "pizzeria")
 
     trie.suggest("piz")
-      expect(trie.suggest("piz")).to.deep.equal(["pizzeria", "pize", "pizza", "pizzicato", "pizzle"])
+    expect(trie.suggest("piz")).to.deep.equal(["pizzeria", "pize", "pizza", "pizzicato", "pizzle"])
   })
 
 })
-
-// console.log(JSON.stringify(trie, null, 4))
