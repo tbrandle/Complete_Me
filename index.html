@@ -1,18 +1,16 @@
-findCompleteWord(currentNode){
-  let temp = Object.keys(currentNode)
-  let suggestedWordArray = temp.map((key) => {
-    let newCurrent = currentNode[key]
-    if (!newCurrent.completeWord) {
-      return this.findCompleteWord(newCurrent.nextNode)
-    }
-    return newCurrent.completeWord
-  })
-  return this.flatten(suggestedWordArray)
-}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Complete Me</title>
+  </head>
+  <body>
+    <input class="search" type="input" name="name" placeholder="search here" value="">
+    <button class="enter-btn" type="button" name="button">Enter</button>
+    <div class="suggestions">
 
-flatten(array){
-  let flattenArray =  array.reduce((arr, value) => {
-    return arr.concat(Array.isArray(value) ? this.flatten(value) : value)
-  }, [])
-  return flattenArray;
-}
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="scripts/script.js"></script>
+  </body>
+</html>
